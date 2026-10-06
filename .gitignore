@@ -1,0 +1,31 @@
+# Secrets — kabhi commit mat karna
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Schema dump — column names reveal business structure, local hi rakho
+schema-dump.json
+schema-dump.md
+
+# Node
+node_modules/
+dist/
+build/
+.next/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+snapshot.json

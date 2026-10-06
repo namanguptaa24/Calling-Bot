@@ -1,0 +1,18 @@
+# Railway deploy config.
+# Postgres service pehle se is project mein hai — ye uske bagal mein chalega,
+# isliye DB queries ~240ms se gir ke <10ms ho jaayengi.
+
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/health"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+
+# numReplicas 1 hi rakhna.
+# Scheduler har instance mein chalta hai — do instance matlab do call
+# roz subah, aur do sync ek saath. Multi-instance chahiye to scheduler
+# alag service mein nikalna padega.

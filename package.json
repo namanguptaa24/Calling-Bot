@@ -1,0 +1,41 @@
+{
+  "name": "calling-bot",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Internal business voice agent — phone se business ka status",
+  "scripts": {
+    "schema": "node scripts/dump-schema.mjs",
+    "copy": "node scripts/copy-to-postgres.mjs",
+    "sanity": "node scripts/sanity.mjs",
+    "migrate": "node scripts/migrate.mjs",
+    "explore": "node scripts/explore.mjs",
+    "snapshot": "node scripts/snapshot.mjs",
+    "agent": "tsx apps/agent/src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "serve": "tsx apps/agent/src/server.ts",
+    "briefing": "tsx apps/agent/src/preview-briefing.ts",
+    "start": "tsx apps/agent/src/server.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.125.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.11.5",
+    "node-cron": "^4.6.0",
+    "openai": "^7.15.0",
+    "pg": "^8.23.0",
+    "zod": "^4.6.5"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.5.1",
+    "@types/node-cron": "^3.0.11",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
