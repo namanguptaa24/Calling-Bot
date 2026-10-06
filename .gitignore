@@ -33,3 +33,4 @@ snapshot.json
 # Vercel
 .vercel/
 .vbuild/
+naman.txt

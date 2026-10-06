@@ -81,8 +81,15 @@ hit karte hain.
 `30 4 * * 1-6` likha hai = **10:00 IST**. Time badlo to UTC mein convert karna
 mat bhoolna (IST − 5:30).
 
-**Pro plan zaroori hai.** Hobby pe cron din mein sirf ek baar chalta hai aur
-`*/15 * * * *` deployment hi fail kar deta hai.
+**Dono cron din mein ek baar chalte hain — jaan-boojhkar.** Hobby pe isse zyada
+frequent cron **deployment hi fail kar deta hai** (silently nahi — build error).
+Isliye sync `0 2 * * *` (07:30 IST) aur briefing `30 4 * * 1-6` (10:00 IST) hai.
+
+Dono ke beech 3 ghante ka faasla है kyunki Hobby pe timing mein **±59 minute**
+ka farak hota hai — sync ko briefing se pehle poora hone ka mauka chahiye.
+
+Pro pe upgrade karo to sync `*/15 * * * *` kar sakte ho; tab data 15 minute se
+zyada purana nahi hoga.
 
 **`CRON_SECRET` set karna hi padega.** Cron routes public URL pe hain — uske
 bina koi bhi `/api/cron/briefing` hit karke call karwa sakta hai. `api/_auth.ts`
