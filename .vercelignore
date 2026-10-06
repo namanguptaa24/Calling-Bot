@@ -1,0 +1,7 @@
+# Vercel ko sirf api/ aur apps/agent/src/ chahiye
+scripts/
+sql/
+snapshot.json
+schema-dump.md
+PLAN.md
+CLAUDE.md

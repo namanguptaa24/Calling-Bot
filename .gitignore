@@ -29,3 +29,7 @@ desktop.ini
 .vscode/
 .idea/
 snapshot.json
+
+# Vercel
+.vercel/
+.vbuild/

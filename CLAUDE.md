@@ -63,26 +63,47 @@ cPanel MySQL hamesha read-only rahegi, dono direction mein clear boundary.
 
 ---
 
-## Deployed service
+## Deployment — Vercel (app) + Railway (Postgres)
 
-`npm start` → `apps/agent/src/server.ts`. Railway pe `railway.toml` se chalta hai,
-Postgres ke bagal mein (isiliye query latency 240ms se gir ke <10ms ho jaati hai).
+`api/` ke routes Vercel Functions hain. `vercel.json` ke crons unhe schedule pe
+hit karte hain.
 
-| Endpoint | Kya |
-|---|---|
-| `GET /health` | data kitni purani, sync/vapi on hai ya nahi, agli briefing kab |
-| `GET /briefing` | call pe kya bola jayega — call kiye bina |
-| `POST /briefing/call` | abhi call karo (cron ka intezaar nahi) |
-| `POST /sync` | abhi sync karo |
+| Route | Kya | maxDuration |
+|---|---|---|
+| `GET /api/health` | data kitni purani, kya configured hai | 30s |
+| `GET /api/briefing` | call pe kya bola jayega — call kiye bina | 60s |
+| `GET /api/cron/sync` | MySQL → Postgres sync | 300s |
+| `GET /api/cron/briefing` | script banao aur call karo | 60s |
 
-Scheduler (IST): sync `*/15 * * * *`, briefing `0 10 * * 1-6`.
+### Vercel ke do khaas niyam
 
-**Har hissa apne credentials ke bina chup-chaap skip hota hai.** Ye
-jaan-boojhkar hai — aadha setup bhi deploy ho sakta hai aur baaki baad mein
-judta hai. `/health` saaf batata hai ki kya missing hai.
+**Cron UTC mein chalta hai, IST mein nahi.** `vercel.json` mein briefing
+`30 4 * * 1-6` likha hai = **10:00 IST**. Time badlo to UTC mein convert karna
+mat bhoolna (IST − 5:30).
 
-**`numReplicas` 1 hi rakhna** — scheduler har instance mein chalta hai, do
-instance matlab roz do call.
+**Pro plan zaroori hai.** Hobby pe cron din mein sirf ek baar chalta hai aur
+`*/15 * * * *` deployment hi fail kar deta hai.
+
+**`CRON_SECRET` set karna hi padega.** Cron routes public URL pe hain — uske
+bina koi bhi `/api/cron/briefing` hit karke call karwa sakta hai. `api/_auth.ts`
+`CRON_SECRET` na hone pe 500 deta hai, khula nahi chhodta.
+
+### SQL code mein embed hai
+
+Serverless bundle mein `sql/` folder nahi jaata, isliye `scripts/embed-sql.mjs`
+usse `apps/agent/src/sql-embedded.ts` banata hai (ye generated file commit hoti
+hai). `sql/*.sql` badlo to `npm run embed-sql` chalana zaroori hai —
+`npm run migrate` khud chala leta hai.
+
+### Local server
+
+`npm start` → `apps/agent/src/server.ts`. Isme `node-cron` wala scheduler aur
+conversational endpoints hain. Ye **sirf local dev ke liye** hai; Vercel pe
+`api/` routes chalte hain. `railway.toml` tab ke liye bacha hai agar kabhi app
+Railway pe shift karni ho (tab scheduler native chalega, `numReplicas` 1 rakhna).
+
+**Har hissa apne credentials ke bina chup-chaap skip hota hai.** `/api/health`
+saaf batata hai ki kya missing hai.
 
 ### Sync ek hi transaction mein hoti hai
 

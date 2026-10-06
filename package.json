@@ -8,14 +8,15 @@
     "schema": "node scripts/dump-schema.mjs",
     "copy": "node scripts/copy-to-postgres.mjs",
     "sanity": "node scripts/sanity.mjs",
-    "migrate": "node scripts/migrate.mjs",
+    "migrate": "node scripts/embed-sql.mjs && node scripts/migrate.mjs",
     "explore": "node scripts/explore.mjs",
     "snapshot": "node scripts/snapshot.mjs",
     "agent": "tsx apps/agent/src/cli.ts",
     "typecheck": "tsc --noEmit",
     "serve": "tsx apps/agent/src/server.ts",
     "briefing": "tsx apps/agent/src/preview-briefing.ts",
-    "start": "tsx apps/agent/src/server.ts"
+    "start": "tsx apps/agent/src/server.ts",
+    "embed-sql": "node scripts/embed-sql.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.125.0",
@@ -35,7 +36,9 @@
     "@types/node": "^26.5.1",
     "@types/node-cron": "^3.0.11",
     "@types/pg": "^8.23.1",
+    "@vercel/node": "^21.0.0",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vercel": "^62.4.0"
   }
 }

@@ -1,22 +1,21 @@
-import { readFileSync, readdirSync } from 'node:fs';
 import type pg from 'pg';
+import { SQL_FILES } from './sql-embedded.js';
 
 /**
  * sql/*.sql — `public` schema ka derived layer.
  *
- * Sab statements `CREATE OR REPLACE` / `IF NOT EXISTS` hain, isliye inhe
- * baar-baar chalana surakshit hai. Sync ke andar bhi yahi chalti hain,
- * usi transaction mein — kyunki tables dobara banane se views gir jaate hain
- * aur unhe usi commit mein wapas aana chahiye.
+ * SQL code mein embed hai (sql-embedded.ts, `npm run embed-sql` se banti hai).
+ * Serverless function ke bundle mein sql/ folder nahi hota, isliye filesystem
+ * se padhna wahan tootta hai.
+ *
+ * Sab statements CREATE OR REPLACE / IF NOT EXISTS hain, to baar-baar chalana
+ * surakshit hai. Sync ke andar bhi yahi chalti hain, usi transaction mein —
+ * tables dobara banane se views gir jaate hain aur unhe usi commit mein
+ * wapas aana chahiye.
  */
 
-const SQL_DIR = new URL('../../../sql/', import.meta.url);
-
-export function migrationFiles(): { name: string; body: string }[] {
-  return readdirSync(SQL_DIR)
-    .filter((f) => f.endsWith('.sql'))
-    .sort()
-    .map((name) => ({ name, body: readFileSync(new URL(name, SQL_DIR), 'utf8') }));
+export function migrationFiles() {
+  return SQL_FILES;
 }
 
 /** Guard: koi migration source ko modify na kare, na kuch drop kare. */
