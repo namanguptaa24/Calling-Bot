@@ -16,7 +16,8 @@
     "serve": "tsx apps/agent/src/server.ts",
     "briefing": "tsx apps/agent/src/preview-briefing.ts",
     "start": "tsx apps/agent/src/server.ts",
-    "embed-sql": "node scripts/embed-sql.mjs"
+    "embed-sql": "node scripts/embed-sql.mjs",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.125.0",
@@ -38,7 +39,6 @@
     "@types/pg": "^8.23.1",
     "@vercel/node": "^21.0.0",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2",
-    "vercel": "^62.4.0"
+    "typescript": "^7.0.2"
   }
 }

@@ -1,0 +1,47 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>calling-bot</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; padding:24px; background:#0b0b0d; color:#e7e7ea;
+         font:14px/1.6 ui-sans-serif,system-ui,-apple-system,sans-serif; }
+  .wrap { max-width:620px; margin:0 auto; }
+  h1 { font-size:18px; margin:0 0 4px; font-weight:600; }
+  .sub { color:#8b8b95; margin:0 0 24px; }
+  .card { background:#141418; border:1px solid #24242b; border-radius:10px;
+          padding:16px 18px; margin-bottom:12px; }
+  .row { display:flex; justify-content:space-between; gap:16px; padding:6px 0;
+         border-bottom:1px solid #1e1e24; }
+  .row:last-child { border-bottom:0; }
+  .k { color:#8b8b95; }
+  .v { font-variant-numeric:tabular-nums; text-align:right; }
+  .ok { color:#4ade80; } .warn { color:#fbbf24; } .bad { color:#f87171; }
+  a { color:#7dd3fc; }
+  code { background:#1e1e24; padding:1px 6px; border-radius:4px; font-size:13px; }
+</style>
+<div class="wrap">
+  <h1>calling-bot</h1>
+  <p class="sub">Roz subah batata hai kiska kaunsa task pending hai, kis client ka, kab se.</p>
+  <div class="card" id="status">status load ho raha hai…</div>
+  <div class="card">
+    <div class="row"><span class="k">Call pe kya bolega</span><span class="v"><a href="/api/briefing">/api/briefing</a></span></div>
+    <div class="row"><span class="k">Raw status</span><span class="v"><a href="/api/health">/api/health</a></span></div>
+  </div>
+</div>
+<script>
+const el = document.getElementById('status');
+const cls = (c) => c === 'on' ? 'ok' : 'warn';
+fetch('/api/health').then(r => r.json()).then(h => {
+  if (!h.ok) throw new Error(h.error || 'health failed');
+  const stale = h.dataAge.days > 7;
+  el.innerHTML = [
+    ['Data', `<span class="${stale ? 'bad' : 'ok'}">${h.dataAge.latest} · ${h.dataAge.days} din purana</span>`],
+    ['Sync', `<span class="${cls(h.sync)}">${h.sync}</span>`],
+    ['Call (Vapi)', `<span class="${cls(h.vapi)}">${h.vapi}</span>`],
+    ['Wording', `<span class="${cls(h.polish)}">${h.polish}</span>`],
+  ].map(([k, v]) => `<div class="row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
+}).catch(e => {
+  el.innerHTML = `<span class="bad">API tak nahi pahunch paya</span><br><code>${e.message}</code>`;
+});
+</script>
